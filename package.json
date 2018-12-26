@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "t":"rm -rf node_modules && npm i && node test/test.js",
+    "t": "node test/test.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "caller-dir": "^1.0.2"
+    "caller-dir": "^1.0.2",
+    "rimraf": "^2.6.2"
   }
 }

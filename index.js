@@ -1,8 +1,9 @@
 
 
-var execSync = require('child_process').execSync;
-var path = require('path');
-var getCallerDir = require('caller-dir');
+const execSync = require('child_process').execSync;
+const path = require('path');
+const getCallerDir = require('caller-dir');
+const rimraf = require('rimraf');
 
 var aliases = {};
 
@@ -15,28 +16,42 @@ function setAlias(alias) {
 	var dir = getCallerDir();
 
 	for(var k in alias) {
-		console.log(path.resolve(dir, alias[k]))
+		//console.log(path.resolve(dir, alias[k]))
 		//executeCommond(`ln -nsf ${alias[k]} ${k}`);
 		//executeCommond(`ln -nsf ../src/render/component ./node_modules/a`);
-		executeCommond(`ln -nsbf ${path.resolve(dir, alias[k])} ./node_modules/${k}`);
+		//executeCommond(`ln -nsf ${path.resolve(dir, alias[k])} ./node_modules/${k}`);
+		mklink(path.resolve(dir, alias[k]), `./node_modules/${k}`)
 	}
 	aliases = {...alias, ...aliases};
 }
 
 function clear() {
 	for(var k in aliases) {
-		executeCommond(`rm -rf ${k}`);
+		//executeCommond(`rm -rf ${k}`);
 		delete aliases[k];
+		rimraf(`./node_modules/${k}`, function(err, a) {
+			if(err) {
+				console.log(err);
+			}
+		});
 	}
 }
 
-async function executeCommond(cmd) {
+var mklink = function() {
+	if(/win32/.test(process.platform)) { 
+		return function(source, target) {
+			executeCommond(`mklink /D ${target} ${source}`);
+		}
+	} else {
+		return function(source, target) {
+			executeCommond(`ln -nsf ${source} ${target}`);
+		}
+	}
+}();
+
+function executeCommond(cmd) {
 	console.log(cmd)
-	return new Promise(function (resolve, reject) {
-		execSync(cmd, function (err, stdout, stderr) {
-			resolve(stdout);
-		})
-	});
+	execSync(cmd)
 }
 
 module.exports = {
