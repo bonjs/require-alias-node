@@ -1,5 +1,5 @@
 
-const {setAlias, clear} = require('../index');
+import {setAlias, clear} from ('../index');
 
 setAlias({
 	'component': "./render/component",
@@ -8,7 +8,6 @@ setAlias({
 	'b': './render/component/b',
 });
 
-var a = require('a');
-var b  = require('b');
+import a from './a';
 
 clear();
