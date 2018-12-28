@@ -10,3 +10,5 @@ setAlias({
 
 var a = require('a');
 var b  = require('b');
+
+clear();
