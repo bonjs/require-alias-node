@@ -1,4 +1,4 @@
-# require-alias-node
+# require-alias-node [![Build Status](https://travis-ci.org/bonjs/require-alias-node.svg?branch=master)](https://travis-ci.org/bonjs/require-alias-node)
 ### A tool which could set an alias for the module's path which is required in the `require` of nodejs     or `import` of ES6
 
 It's the alias of `require-import-alias`
