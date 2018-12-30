@@ -14,7 +14,7 @@ const component = require('../../../src/component');
 const moduleA = require('../../../src/component/render/moduleA');
 ~~~
 
-Now we can use this tool `require-alias-node` to set alias for the moduleA, such as :
+Now we can use this tool `require-alias-node` to set alias for the moduleA, is looks like:
 ~~~javascript
 const requireAliasNode = require('require-alias-node');
 requireAliasNode.setAlias({
