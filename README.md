@@ -29,7 +29,7 @@ const moduleB = require('component/main/moduleB')'
 
 setAlias
 ~~~javascript
-import requireImportAlias from 'require-alias-node'
+import requireAliasNode rom 'require-alias-node'
 requireAliasNode.setAlias({
 	'component': '../../../src/component',
 	'moduleA': '../../../src/component/render/moduleA'
