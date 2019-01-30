@@ -9,15 +9,18 @@ const rimraf = require('rimraf');
 
 var aliases = {};
 
+clear();
+
 /**
- * 检查node_modules中是否已存在要设置的别名的目录或link, 如已存在，给出报错，如不存在，存到aliases并缓存到./node_modules/alias_list中
+ * Check if there is already a directory or link for the alias to be set in node_modules. 
+ * If it already exists, give an error. If it does not exist, save it to aliases and cache it in ./node_modules/alias_list.
  * @param {*} alias 
  */
 function setAlias(alias) {
 
 	var dir = getCallerDir();
 
-	var existsModules = checkoutIsExist(alias);
+	var existsModules = checkIsExist(alias);
 	if(existsModules.length) {
 		throw Error('The modules named ' + existsModules.join(', ') + ' is exist, please change anthor name')
 	}
@@ -29,7 +32,11 @@ function setAlias(alias) {
 	saveLocalAlias(aliases);
 }
 
-function checkoutIsExist(alias) {
+/**
+ * Check if it exist a module with the name of the alias
+ * @param {*} alias 
+ */
+function checkIsExist(alias) {
 
 	var aliasLocal = getLocalAlias();
 	var exists = [];
@@ -42,7 +49,10 @@ function checkoutIsExist(alias) {
 	return exists;
 }
 
-
+/**
+ * Save the aliases in ./node_modules/alias_list
+ * @param {*} alias 
+ */
 function saveLocalAlias(alias) {
 	if(!alias) {
 		return;
@@ -51,6 +61,9 @@ function saveLocalAlias(alias) {
 	fs.writeFileSync('./node_modules/alias_list', str);
 }
 
+/**
+ * Get the local aliases from ./node_modules/alias_list
+ */
 function getLocalAlias() {
 	var aliasLocal = "{}";
 	try {
@@ -61,15 +74,33 @@ function getLocalAlias() {
 	return stringifyParse.parse(aliasLocal);
 }
 
-function clear() {
-	for(var k in aliases) {
-		delete aliases[k];
-		rimraf(`./node_modules/${k}`, function(err, a) {
-			if(err) {
-				console.log(err);
-			}
-		});
+
+/**
+ * remove the alias
+ * @param {*} alias 
+ */
+function clear(alias) {
+
+	// remove all aliases, use no parameters
+	if(typeof alias == 'undefined') {
+		var aliasKeys = Object.getOwnPropertyNames(getLocalAlias());
+		var aliasKeysPaths = aliasKeys.map(function(it) {
+			return `./node_modules/${it}`;
+		}).join(' ');
+		console.log('aliasKeysPaths', aliasKeysPaths)
+		executeCommond(`rm -rf ${aliasKeysPaths}`);
+		aliases = {};
+
+	// if the first parameter`s type is array
+	} else if(Array.isArray(alias)) {
+		alias.forEach(clear);
+	// if the first parameter`s type is string
+	} else if(typeof alias == 'string') {
+		executeCommond(`rm -rf ./node_modules/${alias}`);
+		delete aliases[alias];
 	}
+
+	saveLocalAlias(aliases);
 }
 
 var mklink = function() {
