@@ -43,4 +43,4 @@ import moduleA from 'moduleA'
 import moduleB from 'component/render/moduleB'
 ~~~
 
-It's so gracefully !
+It's so graceful!
